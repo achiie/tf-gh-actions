@@ -5,7 +5,7 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket = "remote-tf-gh-state"
+    bucket = "remote-gh-tf-state"
     prefix = "terraform/state"
   }
 }
