@@ -4,7 +4,7 @@ resource "google_compute_instance" "poc_instance" {
   zone                      = var.zones[0]
   allow_stopping_for_update = false
 
-  tags = ["Rackspace", "POC"]
+  tags = ["test", "poc"]
 
   boot_disk {
     auto_delete = "false"
