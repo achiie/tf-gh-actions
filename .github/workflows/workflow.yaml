@@ -34,6 +34,12 @@ jobs:
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
+    # Terraform validate
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: terraform fmt
