@@ -1,4 +1,4 @@
-name: 'Terraform CI'
+name: 'Deploy Terraform code using gh-actions '
 
 on:
   push:
