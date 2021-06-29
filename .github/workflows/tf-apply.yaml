@@ -1,0 +1,78 @@
+name: 'Deploy Terraform code using gh-actions '
+
+# This workflow automatically runs on push/pull request events to the master branch. // Ubuntu-latest is our virtual environment OS.
+on:
+  workflow_dispatch:
+
+jobs:
+  job_1:
+    name: terraform-plan
+    runs-on: ubuntu-latest
+  
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+
+    # Checkout the repository to the GitHub Actions runner//Actions/checkout@v2 copies our Terraform code from the repo to the virtual environment / GitHub-hosted Runner.
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token./ Hashicorp/setup-terraform@v1.1.0 installs Terraform CLI to the virtual environment and allows us to run common CLI cmdlets on our Terraform code.
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc./Terraform fmt, init, validate, and plan will be used to ensure our Terraform code is in a ‘ready’ state prior to an apply.
+    - name: Terraform Init
+      run: terraform init
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    # Terraform validate
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+  # Workflow for the deployment 
+  job_2:
+    name: deploy-prod
+    runs-on: 'ubuntu-latest'
+    environment: 'production'
+    needs: job_1
+    steps:
+          # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    # Terraform validate
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
