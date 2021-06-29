@@ -52,6 +52,7 @@ jobs:
 
   # Workflow for the deployment
   deploy-master:
+    name: deploy-prod
     runs-on: 'ubuntu-latest'
     environment: 'production'
     needs: terraform
