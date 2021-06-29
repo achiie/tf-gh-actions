@@ -50,7 +50,7 @@ jobs:
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-  # Workflow for the deployment
+  # Workflow for the deployment 
   deploy-master:
     name: deploy-prod
     runs-on: 'ubuntu-latest'
